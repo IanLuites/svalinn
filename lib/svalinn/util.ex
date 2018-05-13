@@ -9,9 +9,7 @@ defmodule Svalinn.Util do
   import Svalinn.Encodings.URL, only: [to_integer: 1, to_binary: 1]
 
   @spec prefix(binary) :: {:ok, pos_integer, atom} | {:error, :invalid_prefix}
-  def prefix(<<prefix::binary-1, _::binary>>), do: prefix(prefix)
-
-  def prefix(prefix) do
+  def prefix(<<prefix::binary-1>>) do
     with {:ok, prefix} <- to_integer(prefix),
          <<_reserved::1, version::3, encoding::3>> <- <<prefix::size(7)>>,
          encoding when encoding != nil <- Enum.at(@encodings, encoding) do
@@ -20,6 +18,8 @@ defmodule Svalinn.Util do
       _ -> {:error, :invalid_prefix}
     end
   end
+
+  def prefix(<<prefix::binary-1, _::binary>>), do: prefix(prefix)
 
   @spec prefix(pos_integer, atom) :: {:ok, binary} | {:error, :prefix_generation_failed}
   def prefix(version, encoding) do
