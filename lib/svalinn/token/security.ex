@@ -7,7 +7,7 @@ defmodule Svalinn.Token.Security do
 
   @doc @moduledoc
   defmacro __using__(opts \\ []) do
-    bytes = Keyword.get(opts, :bytes, @default_random_bytes)
+    _bytes = Keyword.get(opts, :bytes, @default_random_bytes)
 
     quote do
     end
