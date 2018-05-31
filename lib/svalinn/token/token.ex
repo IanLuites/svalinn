@@ -1,5 +1,8 @@
 defmodule Svalinn.Token do
+  @doc false
   @callback __token_parse__(map) :: map
+
+  @doc false
   @callback __token_load__(map, Keyword.t()) :: map
 
   defmacro __using__(opts \\ []) do

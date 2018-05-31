@@ -12,23 +12,23 @@ defmodule Svalinn.Token.Lookup do
         quote do
           defimpl Svalinn.Tokenize, for: unquote(struct) do
             def token(s = %unquote(struct){}),
-              do: struct(unquote(__CALLER__.module), id: Map.fetch!(s, unquote(id)))
+              do: {:ok, struct(unquote(__CALLER__.module), id: Map.fetch!(s, unquote(id)))}
           end
         end
       else
         quote do
           defimpl Svalinn.Tokenize, for: unquote(struct) do
             def token(s = %unquote(struct){}),
-              do: struct(unquote(__CALLER__.module), id: unquote(__CALLER__.module).id(s))
+              do: {:ok, struct(unquote(__CALLER__.module), id: unquote(__CALLER__.module).id(s))}
           end
         end
       end
 
     load =
       if lookup = opts[:lookup] do
-        quote do: def(__token_load__(id, _), do: unquote(lookup).(id))
+        quote do: unquote(lookup).(id)
       else
-        quote do: def(__token_load__(id, _), do: lookup(id))
+        quote do: lookup(id)
       end
 
     quote do
@@ -36,10 +36,12 @@ defmodule Svalinn.Token.Lookup do
       defstruct @enforce_keys
 
       @impl Svalinn.Token
+      @spec __token_parse__(map) :: any
       def __token_parse__(%{id: id}), do: id
 
       @impl Svalinn.Token
-      unquote(load)
+      @spec __token_load__(any, any) :: any
+      def __token_load__(id, _), do: unquote(load)
 
       unquote(tokenizer)
     end

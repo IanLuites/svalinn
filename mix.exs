@@ -5,7 +5,7 @@ defmodule Svalinn.MixProject do
     [
       app: :svalinn,
       description: "Secure token generation and decoding.",
-      version: "0.0.1",
+      version: "0.0.4",
       elixir: "~> 1.6",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
