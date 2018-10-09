@@ -9,4 +9,6 @@ defmodule Svalinn.Decoder do
       {:ok, unpacked}
     end
   end
+
+  def decode(_, _, _), do: {:error, :invalid_version}
 end
