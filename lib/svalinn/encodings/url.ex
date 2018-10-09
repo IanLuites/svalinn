@@ -58,4 +58,6 @@ defmodule Svalinn.Encodings.URL do
        ]}
     )
   end
+
+  def to_integer(_), do: {:error, :invalid_value}
 end
