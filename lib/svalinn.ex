@@ -34,16 +34,19 @@ defmodule Svalinn do
   @doc ~S"""
   Decode a token.
   """
-  @spec decode(map, Keyword.t()) :: {:ok, any} | {:error, atom}
-  def decode(token, opts \\ []) do
-    with <<prefix::binary-1, data::binary>> <- token,
-         {:ok, version, encoding} <- prefix(prefix),
+  @spec decode(binary, Keyword.t()) :: {:ok, any} | {:error, atom}
+  def decode(token, opts \\ [])
+
+  def decode(<<prefix::binary-1, data::binary>>, opts) do
+    with {:ok, version, encoding} <- prefix(prefix),
          {:ok, packed} <- encoding.decode(data),
          {:ok, token} <- decode(version, packed, opts),
          {:ok, data} <- load_token(token, opts) do
       {:ok, data}
     end
   end
+
+  def decode(_, _), do: {:error, :invalid_token_data}
 
   @spec prepare_token(map) :: map | {:error, :invalid_token}
   defp prepare_token(token) do
